@@ -8,6 +8,7 @@ sudo apt install python3-pip
 sudo apt-get install libsasl2-dev python-dev libldap2-dev libssl-dev
 sudo apt-get install python3-ldap
 cd /opt
+sudo mkdir RedTeamHelp
 sudo chmod 777 RedTeamHelp
 sudo mkdir payloads
 cd /opt/RedTeamHelp
@@ -24,13 +25,11 @@ sudo chmod 777 ActiveDirectory
 cd ActiveDirectory
 sudo git clone https://github.com/aas-n/spraykatz.git
 sudo git clone https://github.com/GhostPack/Certify.git
-sudo git clone https://github.com/ShutdownRepo/ShadowCoerce.git
-sudo git clone https://github.com/byt3bl33d3r/ItWasAllADream.git
+
 cd ..
 sudo chmod 777 evasion
 cd evasion
-sudo git clone https://github.com/mdsecactivebreach/SharpShooter.git
-sudo git clone https://github.com/WazeHell/LightMe.git
+
 sudo git clone https://github.com/optiv/ScareCrow.git
 cd ..
 sudo mkdir crawlers
@@ -48,7 +47,6 @@ sudo pip install git+https://github.com/dirkjanm/adidnsdump#egg=adidnsdump
 git clone https://github.com/ropnop/windapsearch.git
 
 cd ..
-sudo git clone https://github.com/kyle41111/OffensiveCSharp.git
 
 cd networking
 sudo git clone https://github.com/cube0x0/KrbRelay.git
