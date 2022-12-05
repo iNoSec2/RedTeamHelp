@@ -3,7 +3,7 @@
 using System.Net;
 using System.Runtime.InteropServices;
 
-namespace ConsoleApp
+namespace EnumDisplay
 {
     class Program
     {
