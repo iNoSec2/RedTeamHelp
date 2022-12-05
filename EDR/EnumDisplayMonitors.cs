@@ -8,9 +8,6 @@ namespace EnumDisplay
     class Program
     {
         [DllImport("kernel32.dll", SetLastError = true)]
-        static extern UInt32 WaitForSingleObject(IntPtr hHandle, UInt32 dwMilliseconds);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
         static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
 
         [DllImport("kernel32.dll", SetLastError = true)]
