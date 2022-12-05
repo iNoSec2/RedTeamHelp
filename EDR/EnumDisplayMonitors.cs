@@ -52,7 +52,7 @@ namespace EnumDisplay
                     return false; // Stop enumerating monitors after the first one
                 };
 
-                // Invoke the EnumDisplayMonitors function with the callback delegate
+                // Invoke the EnumDisplayMonitors function with the callback delegate, and keep the thread alive.
                 EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, callback, IntPtr.Zero);
                 Thread.Sleep(Timeout.Infinite);
             }
