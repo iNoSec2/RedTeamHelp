@@ -5,7 +5,7 @@ using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
 
-namespace ConsoleApp
+namespace enumDisplay
 {
     class Program
     {
