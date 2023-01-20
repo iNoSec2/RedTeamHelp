@@ -1,4 +1,8 @@
 # RedTeamHelp
+*UPDATE 1/20/23*
+Ghostpack binaries in the active directory section have been cleaned up with confuserex. Deleted alot of old, useless AMSI bypasses. Deleted tools I dont use anymore.
+
+
 *UPDATE 1/19/23*
 This is being restructured like crazy. 99% of these tools are not viable anymore.
 
