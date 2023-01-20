@@ -1,1 +1,0 @@
-https://github.com/danielbohannon/Invoke-Obfuscation.git
