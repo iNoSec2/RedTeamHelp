@@ -1,6 +1,12 @@
 # RedTeamHelp
 *UPDATE 1/20/23*
-Ghostpack binaries in the active directory section have been cleaned up with confuserex. Deleted alot of old, useless AMSI bypasses. Deleted tools I dont use anymore. Adding shellcode loaders. Added a ton of BOFS. Thanks to Boku,Outflank,mkgeeky,ajpc500 and all else.
+1. Ghostpack binaries in the Active Directory section have been cleaned up and gone through control flow obfuscation,type scrambling,function obfuscation, anti-debug,antidump measures with confuserex.
+
+2. Deleted alot of old, useless AMSI bypasses as well as tools I dont use anymore.
+
+3. Adding shellcode loaders.
+
+4. Added a ton of BOFS. Thanks to Boku,Outflank,mkgeeky,ajpc500 and all else.
 
 
 *UPDATE 1/19/23*
