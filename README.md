@@ -6,7 +6,7 @@
 
 3. Adding shellcode loaders.
 
-4. Added a ton of BOFS. Thanks to Boku,Outflank,mkgeeky,ajpc500 and all else.
+4. Added a ton of BOFS. Thanks to Boku,Outflank,mkgeeky,ajpc500,xForce and all else.
 
 
 *UPDATE 1/19/23*
