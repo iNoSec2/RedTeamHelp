@@ -12,3 +12,19 @@ cd ..
 cd ActiveDirectory
 git clone https://github.com/ropnop/windapsearch.git
 cd ..
+sudo mkdir adcs
+cd adcs
+pip3 install certipy-ad
+git clone https://github.com/AlmondOffSec/PassTheCert.git
+git clone https://github.com/ExAndroidDev/impacket.git
+cd impacket
+git checkout ntlmrelayx-adcs-attack
+pip install .
+cd ..
+cd ..
+git clone https://github.com/GeorgePatsias/ScareCrow-CobaltStrike.git
+cd ScareCrow-CobaltStrike
+sudo rm /opt/RedTeamHelp/BOFS/ScareCrow-CobaltStrike
+cp  /opt/RedTeamHelp/ScareCrow.cna /opt/RedTeamHelp/BOFS/ScareCrow-CobaltStrike
+cd /opt/RedTeamTools/ShellcodeRunners
+git clone https://github.com/D1rkMtr/FilelessRemotePE.git
