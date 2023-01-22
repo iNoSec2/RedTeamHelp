@@ -28,3 +28,8 @@ sudo rm /opt/RedTeamHelp/BOFS/ScareCrow-CobaltStrike
 cp  /opt/RedTeamHelp/ScareCrow.cna /opt/RedTeamHelp/BOFS/ScareCrow-CobaltStrike
 cd /opt/RedTeamTools/ShellcodeRunners
 git clone https://github.com/D1rkMtr/FilelessRemotePE.git
+sudo apt install openjdk-11-jdk
+cd /home/kali
+git clone https://github.com/anthemtotheego/CredBandit.git
+cd CredBandit/src
+x86_64-w64-mingw32-gcc -o credBanditx64.o -c credBandit.c  -masm=intel
