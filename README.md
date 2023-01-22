@@ -8,6 +8,8 @@
 
 4. Added a ton of BOFS. Thanks to Boku,Outflank,mkgeeky,ajpc500,xForce and all else.
 
+5. Make sure to run the install.sh script.
+
 
 *UPDATE 1/19/23*
 This is being restructured like crazy. 99% of these tools are not viable anymore.
