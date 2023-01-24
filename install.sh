@@ -26,6 +26,7 @@ git clone https://github.com/D1rkMtr/FilelessRemotePE.git
 
 cd ..
 cd BOFs
+git clone https://github.com/kyle41111/Inline-Execute-PE
 git clone https://github.com/anthemtotheego/CredBandit.git
 git clone https://github.com/GeorgePatsias/ScareCrow-CobaltStrike.git
 cd CredBandit/src
