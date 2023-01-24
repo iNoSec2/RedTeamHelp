@@ -30,6 +30,11 @@ git clone https://github.com/anthemtotheego/CredBandit.git
 git clone https://github.com/GeorgePatsias/ScareCrow-CobaltStrike.git
 cd CredBandit/src
 x86_64-w64-mingw32-gcc -o credBanditx64.o -c credBandit.c  -masm=intel
+cd ..
+cd ..
+cd ScareCrow-CobaltStrike
+sudo chmod +x install.sh
+sudo bash install.sh
 
 
 
