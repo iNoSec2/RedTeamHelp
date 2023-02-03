@@ -8,6 +8,7 @@ go get github.com/yeka/zip
 go get github.com/josephspurrier/goversioninfo
 
 cd ActiveDirectory
+git clone https://github.com/samratashok/ADModule.git
 git clone https://github.com/ropnop/windapsearch.git
 cd ..
 sudo mkdir adcs
