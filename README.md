@@ -8,7 +8,11 @@
 
 4. Added a ton of BOFS. Thanks to Boku,Outflank,mkgeeky,ajpc500,xForce and all else.
 
-5. Make sure to run the install.sh script.
+5. Added baseline Cobalt Strike Profiles.
+
+6. Make sure to run the install.sh script.
+
+*These are only the public tools I use*
 
 
 *UPDATE 1/19/23*
