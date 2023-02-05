@@ -1,6 +1,6 @@
 # RedTeamHelp
 *UPDATE 1/20/23*
-1. Ghostpack binaries in the Active Directory section have been cleaned up and gone through control flow obfuscation,type scrambling,function obfuscation, anti-debug,antidump measures with confuserex.
+1. The absolutely essential Ghostpack binaries in the Active Directory section have been cleaned up and gone through control flow obfuscation,type scrambling,function obfuscation, anti-debug,antidump measures with confuserex.
 
 2. Deleted alot of old, useless AMSI bypasses as well as tools I dont use anymore.
 
@@ -12,7 +12,8 @@
 
 
 *UPDATE 1/19/23*
-This is being restructured like crazy. 99% of these tools are not viable anymore.
+This is being restructured like crazy. 99% of these tools are not viable anymore. If its on someones "Red Team Cheet Sheet!" Its likely sig'd to shit.
+
 
 
 Tools I use on red team engagements and more.
