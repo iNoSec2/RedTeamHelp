@@ -96,7 +96,7 @@ process-inject {
     # shape the content and properties of what we will inject
     set min_alloc "38634";
     set userwx    "false";
-    set startrwx "true";
+    set startrwx "false";
 
     transform-x86 {
         prepend "\x90\x90\x90\x90\x90\x90\x90\x90\x90"; # NOP, NOP!
