@@ -63,7 +63,8 @@ stage {
 
 
         transform-x86 {
-                prepend "\x90\x90\x90"; # NOP, NOP!
+                prepend "\xFF\xC0\xFF\xC8"; # new instruction set with inverse pairings
+                
                 strrep "ReflectiveLoader" "LoadDataImage";
                 strrep "This program cannot be run in DOS mode" "Please Refer To Manual";
                 strrep "(admin)""(adm)";
@@ -75,7 +76,8 @@ stage {
                 }
 
         transform-x64 {
-                prepend "\x90\x90\x90"; # NOP, NOP!
+                prepend "\xFF\xC0\xFF\xC8"; # new instruction set with inverse pairings
+               
                 strrep "(admin)""(adm)";
                 strrep "is an x64 process (can't inject x86 content)" "cant go from 86 to 64";
                 strrep "is an x86 process (can't inject x64 content)" "cant go from 64 to 86";
