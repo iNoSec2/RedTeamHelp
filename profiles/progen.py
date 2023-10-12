@@ -1,5 +1,13 @@
+#!/usr/bin/env python3
 
 import random
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-R', '--redirector', required=False, help="(Optional) Set if you are using a redirector", action='store_true')
+parser.add_argument("-O", "--output", required=False, help="(Optional) Specify output file name. Default: cobalt.profile", default='cobalt.profile')
+parser.add_argument("-S", "--sleep", required=False, help="(Optional) Specify desired sleep time in ms. Default: 44000", default='44000')
+args = parser.parse_args()
 
 # Function to generate a "rich header" with random assembly opcodes
 def generate_junk_assembly(length):
@@ -37,11 +45,11 @@ for byte_string in byte_strings:
 # Join the formatted bytes into a single string
 formatted_string = ''.join(formatted_bytes)
 
-
+uri = "/c/msdownload/update/others/2023/1/XPsPk-qQVhdGPkRajly9Z "
 
 # Here is an example template where you want to replace the text "REPLACE_PREPEND"
 stub = """
-set sleeptime "44000";
+set sleeptime "REPLACE_SLEEPTIME";
 set jitter    "37";
 set useragent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.133 Safari/537.36";
 
@@ -237,7 +245,7 @@ http-config {
 }
 
 http-get {
-set uri "/c/msdownload/update/others/2022/11/lvJH6WKebIxYOP5aqCjtB ";
+set uri "REPLACE_URI";
 
 
 
@@ -269,7 +277,7 @@ server {
 }
 
 http-post {
-set uri "/c/msdownload/update/others/2023/1/XPsPk-qQVhdGPkRajly9Z ";
+set uri "REPLACE_URI";
 
 
 set verb "GET";
@@ -327,9 +335,11 @@ http-stager {
 stub = stub.replace("REPLACE_PREPEND", formatted_string)
 stub = stub.replace("REPLACE_RICH", rich_header)
 
+if args.redirector:
+    stub = stub.replace('set trust_x_forwarded_for "false;', 'set trust_x_forwarded_for "true;')
+stub = stub.replace("REPLACE_URI", uri)
+stub = stub.replace("REPLACE_SLEEPTIME", args.sleep)
 
 
-with open('cobalt.profile', 'w') as file:
+with open(args.output, 'w') as file:
     file.write(stub)
-
-
