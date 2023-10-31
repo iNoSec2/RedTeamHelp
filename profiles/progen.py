@@ -4,9 +4,9 @@ import random
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-R', '--redirector', required=False, help="(Optional) Set if you are using a redirector", action='store_true')
-parser.add_argument("-O", "--output", required=False, help="(Optional) Specify output file name. Default: cobalt.profile", default='cobalt.profile')
-parser.add_argument("-S", "--sleep", required=False, help="(Optional) Specify desired sleep time in ms. Default: 44000", default='44000')
+parser.add_argument('--redirector', required=False, help="(Optional) Set if you are using a redirector", action='store_true')
+parser.add_argument("--output", required=False, help="(Optional) Specify output file name. Default: cobalt.profile", default='cobalt.profile')
+parser.add_argument("--sleep", required=False, help="(Optional) Specify desired sleep time in ms. Default: 60000", default='60000')
 args = parser.parse_args()
 
 # Function to generate a "rich header" with random assembly opcodes
@@ -17,6 +17,25 @@ def generate_rich_header(length):
     rich_header = generate_junk_assembly(length)
     rich_header_hex = ''.join([f"\\x{ord(c):02x}" for c in rich_header])
     return rich_header_hex
+
+def get_jitter() -> str:
+    "Set Random Jitter"
+    low = 20
+    high = 69
+    return str(random.randint(low, high))
+
+def get_user_agent() -> str:
+    "Return random user agent"
+    random_user_agents = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36",       # windows / chrome
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",       # windows / chrome
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/118.0",                                      # windows / firefox
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0",                                      # windows / firefox
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36", # mac / safari
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36", # mac / safari
+    ]
+
+    return random_user_agents[random.randint(0, len(random_user_agents) - 1)]
 
 # Generate a rich header
 rich_header = generate_rich_header(random.randint(5, 20) * 4)
@@ -45,13 +64,12 @@ for byte_string in byte_strings:
 # Join the formatted bytes into a single string
 formatted_string = ''.join(formatted_bytes)
 
-uri = "/c/msdownload/update/others/2023/1/XPsPk-qQVhdGPkRajly9Z "
-
 # Here is an example template where you want to replace the text "REPLACE_PREPEND"
 stub = """
 set sleeptime "REPLACE_SLEEPTIME";
-set jitter    "37";
-set useragent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.133 Safari/537.36";
+set jitter    "REPLACE_JITTER";
+# set useragent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.133 Safari/537.36";
+set useragent "REPLACE_USERAGENT";
 
 # Task and Proxy Max Size
 set tasks_max_size "1048576";
@@ -245,7 +263,7 @@ http-config {
 }
 
 http-get {
-set uri "REPLACE_URI";
+set uri "/c/msdownload/update/others/2022/11/lvJH6WKebIxYOP5aqCjtB ";
 
 
 
@@ -277,7 +295,7 @@ server {
 }
 
 http-post {
-set uri "REPLACE_URI";
+set uri "/c/msdownload/update/others/2023/1/XPsPk-qQVhdGPkRajly9Z ";
 
 
 set verb "GET";
@@ -330,16 +348,24 @@ http-stager {
 }
 """
 
-""
+# This next section could 100% have cleaner code/be more efficient
+# Its done this way for readability, plus if someone wants to edit it later it should be easy
+
 # Replace the placeholders in two separate steps
+
 stub = stub.replace("REPLACE_PREPEND", formatted_string)
 stub = stub.replace("REPLACE_RICH", rich_header)
+stub = stub.replace("REPLACE_JITTER", get_jitter())
+stub = stub.replace("REPLACE_USERAGENT", get_user_agent())
 
 if args.redirector:
     stub = stub.replace('set trust_x_forwarded_for "false;', 'set trust_x_forwarded_for "true;')
-stub = stub.replace("REPLACE_URI", uri)
-stub = stub.replace("REPLACE_SLEEPTIME", args.sleep)
+    print("[+] Setting up for use with redirector")
 
+stub = stub.replace("REPLACE_SLEEPTIME", args.sleep)
+print(f"[+] Using sleep time of {args.sleep}ms ({int(args.sleep) / 1000} seconds)")
+
+print(f"[+] Outputting to file: '{args.output}'")
 
 with open(args.output, 'w') as file:
     file.write(stub)
