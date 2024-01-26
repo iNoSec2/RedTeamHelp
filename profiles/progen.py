@@ -4,9 +4,13 @@ import random
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--redirector', required=False, help="(Optional) Set if you are using a redirector", action='store_true')
 parser.add_argument("--output", required=False, help="(Optional) Specify output file name. Default: cobalt.profile", default='cobalt.profile')
 parser.add_argument("--sleep", required=False, help="(Optional) Specify desired sleep time in ms. Default: 60000", default='60000')
+
+parser.add_argument('--redirector', required=False, help="(Optional) Set if you are using a redirector", action='store_true')
+group = parser.add_argument_group('redirector')
+group.add_argument("--domain", action="store", required='--redirector', help="FQDN for the domain you will be using in your redirector")
+group.add_argument("--password", action="store", required='--redirector', help="Password for your domain, must be the same password for your keystore.")
 args = parser.parse_args()
 
 # Function to generate a "rich header" with random assembly opcodes
@@ -105,7 +109,7 @@ set ssh_pipename "W32TIME_ALT_##";
 
 #}
 
-
+#IF_USE_REDIRECTOR
 
 stage {
         set obfuscate "true";
@@ -348,19 +352,32 @@ http-stager {
 }
 """
 
+def redirector_cert_info(domain: str, password: str) -> str:
+    redir_info = f"""
+https-certificate {{
+    set keystore "{domain}.store";
+    set password "{password}";
+}}
+
+code-signer {{
+    set keystore "{domain}.jks";
+    set password "{password}";
+    set alias "{domain}";
+}}
+    """
+    return redir_info
+
 # This next section could 100% have cleaner code/be more efficient
 # Its done this way for readability, plus if someone wants to edit it later it should be easy
-
-# Replace the placeholders in two separate steps
-
 stub = stub.replace("REPLACE_PREPEND", formatted_string)
 stub = stub.replace("REPLACE_RICH", rich_header)
 stub = stub.replace("REPLACE_JITTER", get_jitter())
 stub = stub.replace("REPLACE_USERAGENT", get_user_agent())
 
 if args.redirector:
-    stub = stub.replace('set trust_x_forwarded_for "false;', 'set trust_x_forwarded_for "true;')
     print("[+] Setting up for use with redirector")
+    stub = stub.replace('set trust_x_forwarded_for "false;', 'set trust_x_forwarded_for "true;')
+    stub = stub.replace('#IF_USE_REDIRECTOR', redirector_cert_info(args.domain, args.password))
 
 stub = stub.replace("REPLACE_SLEEPTIME", args.sleep)
 print(f"[+] Using sleep time of {args.sleep}ms ({int(args.sleep) / 1000} seconds)")
